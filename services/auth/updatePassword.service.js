@@ -3,7 +3,6 @@ const {hashPassword, comparePassword} = require('../../providers/auth/bcrypt.pro
 
 
 const updatePasswordService = async (userId, data) =>{
-    console.log("USER ID:", userId);
     
     const { oldPassword, newPassword } = data;
 
