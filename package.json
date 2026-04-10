@@ -20,11 +20,6 @@
     "staging": "cross-env NODE_ENV=staging nodemon app.js",
     "start": "cross-env NODE_ENV=production nodemon app.js"
   },
-  "devDependencies": {
-    "@types/uuid": "^10.0.0",
-    "cross-env": "^10.1.0",
-    "nodemon": "^3.1.14"
-  },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
@@ -43,5 +38,10 @@
     "razorpay": "^2.9.6",
     "uuid": "^13.0.0",
     "winston": "^3.19.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0",
+    "cross-env": "^10.1.0",
+    "nodemon": "^3.1.14"
   }
 }

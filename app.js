@@ -25,7 +25,7 @@ const { StatusCodes } = require('http-status-codes');
 const { responseFormatter } = require('./middlewares/responseFormatter.middleware');
 const { errorLogger } = require('./utils/errorLogger.util');
 const { authRouter } = require('./routes/auth.routes');
-// const { userRouter } = require('./routes/user.routes');
+const { userRouter } = require('./routes/user.routes');
 // const { productRouter } = require('./routes/product.routes');
 // const { cartRouter } = require("./routes/cart.routes");
 // const { orderRouter } = require("./routes/order.routes");
@@ -61,12 +61,13 @@ const limiter = rateLimit({
     message: "Too many requests, calm down"
 });
 
+
 app.use('/api/auth/login', limiter);
 app.use('/api/auth/register', limiter);
 app.use('/api/auth/refresh-token', limiter);
 
 app.use('/api/auth', authRouter);
-// app.use('/api/user', userRouter);
+app.use('/api/user', userRouter);
 
 
 app.use((req, res) =>{
