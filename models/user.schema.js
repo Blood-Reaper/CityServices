@@ -1,12 +1,10 @@
-const { Schema, model }  =  require('mongoose');
-
+const { Schema, model } = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const {
     NAME_MAX_LENGTH,
     PASSWORD_MIN_LENGTH
-} = require('../constants/user.constant');
-
-
+} = require("../constants/user.constant");
 
 const userSchema = new Schema(
     {
@@ -14,47 +12,57 @@ const userSchema = new Schema(
             type: String,
             required: [true, "First name is required"],
             trim: true,
-            maxLength: [NAME_MAX_LENGTH, `First name cannot exceed ${ NAME_MAX_LENGTH} characters`],
+            maxLength: [NAME_MAX_LENGTH],
         },
 
         lastName: {
             type: String,
             trim: true,
-            maxLength: [NAME_MAX_LENGTH, `Last name cannot exceed ${ NAME_MAX_LENGTH} characters`],
+            maxLength: [NAME_MAX_LENGTH],
         },
 
         email: {
             type: String,
             required: [true, "Email is required"],
-            trim: true,
-            lowercase: true,
             unique: true,
             index: true,
+            lowercase: true,
+            trim: true,
             validate: {
                 validator: function (email) {
-                    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+                    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
                 },
-                message: "Please enter a valid email address",
+                message: "Invalid email format",
             },
         },
 
         password: {
             type: String,
             required: [true, "Password is required"],
-            minLength: [PASSWORD_MIN_LENGTH, `Password must be at least ${PASSWORD_MIN_LENGTH} characters long`],
+            minlength: [PASSWORD_MIN_LENGTH],
             select: false,
-        },
-
-        refreshToken: {
-            type: String,
-            default: null,
         },
 
         role: {
             type: String,
-            enum: ["user", "Vendor"],
-            default: "user"
-        }
+            enum: ["user", "vendor"],
+            default: "user",
+        },
+
+        isEmailVerified: {
+            type: Boolean,
+            default: false,
+        },
+
+        refreshTokens: [
+            {
+                token: String,
+                createdAt: {
+                    type: Date,
+                    default: Date.now,
+                },
+            },
+        ],
     },
     {
         timestamps: true,
@@ -62,16 +70,27 @@ const userSchema = new Schema(
     }
 );
 
+//
+// 🔐 Hash password automatically
+//
+userSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) return next();
 
-//  Remove sensitive fields automatically
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
+
+//
+// 🧹 Remove sensitive data from API response
+//
 userSchema.set("toJSON", {
     transform: function (doc, ret) {
         delete ret.password;
-        delete ret.refreshToken;
+        delete ret.refreshTokens;
         return ret;
     },
 });
 
 const User = model("User", userSchema);
 
-module.exports = { User }
+module.exports = { User };
