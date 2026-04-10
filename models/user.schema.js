@@ -54,7 +54,7 @@ const userSchema = new Schema(
             type: String,
             enum: ["user", "vendor"],
             default: "user"
-        }
+        },
     },
     {
         timestamps: true,

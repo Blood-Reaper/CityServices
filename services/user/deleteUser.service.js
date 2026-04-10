@@ -3,7 +3,7 @@ const { StatusCodes } = require('http-status-codes');
 
 
 const deleteUserService = async (userId) =>{
-    const user = await User.findByIdAndDelete(userId);
+    const user = await User.findById(userId);
 
     if(!user){
         const error = new Error("User not found");

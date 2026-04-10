@@ -26,6 +26,7 @@ const { responseFormatter } = require('./middlewares/responseFormatter.middlewar
 const { errorLogger } = require('./utils/errorLogger.util');
 const { authRouter } = require('./routes/auth.routes');
 const { userRouter } = require('./routes/user.routes');
+const {vendorRouter} = require('./routes/vendor.routes');
 // const { productRouter } = require('./routes/product.routes');
 // const { cartRouter } = require("./routes/cart.routes");
 // const { orderRouter } = require("./routes/order.routes");
@@ -68,6 +69,10 @@ app.use('/api/auth/refresh-token', limiter);
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+app.use('/api/vendor', vendorRouter);
+
+
+
 
 
 app.use((req, res) =>{
